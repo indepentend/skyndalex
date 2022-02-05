@@ -12,10 +12,10 @@ module.exports = {
         if (interaction.options.getSubcommand() === "cache") {
             const embed = new MessageEmbed()
                 .setTitle(`Cache stats`)
-                .addField(`Guilds`, client.guilds.cache.size)
-                .addField(`Users`, client.users.cache.size)
-                .addField(`Channels`, client.channels.cache.size)
-                .addField(`Emojis`, client.emojis.cache.size)
+                .addField(`Guilds`, `${client.guilds.cache.size}`)
+                .addField(`Users`, `${client.users.cache.size}`)
+                .addField(`Channels`, `${client.channels.cache.size}`)
+                .addField(`Emojis`, `${client.emojis.cache.size}`)
             await interaction.reply({ embeds: [embed] })
         } else if (interaction.options.getSubcommand() === "system") {
             si.cpuTemperature().then(data => interaction.reply({content: data.main}))

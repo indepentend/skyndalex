@@ -110,7 +110,6 @@ module.exports = {
                 await interaction.channel.permissionOverwrites.edit(ticketUser, {
                     VIEW_CHANNEL: true,
                 })
-
                 const embedModlog4 = new MessageEmbed()
                     .setDescription(`Opened ticket again by <@${interaction.user.id}> (${interaction.user.id}).`)
                     .setColor("GREEN")

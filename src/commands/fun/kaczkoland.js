@@ -18,7 +18,8 @@ module.exports = {
                                 { name: "placed_blocks", value: "top-placed_blocks" },
                                 { name: "crafted_items", value: "top-crafted_items" },
                                 { name: "killed_mobs", value: "top-killed_mobs" },
-                                { name: "played_time", value: "top-played_time" }
+                                { name: "played_time", value: "top-played_time" },
+                                { name: "deaths", value: "top-deaths"}
                             ]}
                     ]},
                 { name: "single-player", description: "Single-Player stats", type: 1, options: [
@@ -49,6 +50,22 @@ module.exports = {
                 break;
             case "top":
                 switch (interaction.options.getString("mode")) {
+                    case "top_money":
+                        fetch ("https://api.kaczkoland.pl/v2/getTopPlayers")
+                            .then(res => res.json())
+                            .then(async res => {
+                                let data = [];
+                                for (let i in res.data.money) {
+                                    data.push(res.data.money[i].player.name);
+                                };
+
+                                let embed = new MessageEmbed()
+                                    .setTitle(`Money - Top (1 - 5)`)
+                                    .setDescription(`\`\`\`${data.join(`,\n`)}\`\`\``)
+                                    .setColor("DARK_BUT_NOT_BLACK")
+                                await interaction.reply({ embeds: [embed] })
+                            })
+                        break;
                     case "top-mined_blocks":
                         fetch ("https://api.kaczkoland.pl/v2/getTopPlayers")
                             .then(res => res.json())
@@ -64,18 +81,70 @@ module.exports = {
                                     .setColor("DARK_BUT_NOT_BLACK")
                                 await interaction.reply({ embeds: [embed] })
                             })
-                    case "top_money":
+                        break;
+                    case "top-placed_blocks":
                         fetch ("https://api.kaczkoland.pl/v2/getTopPlayers")
                             .then(res => res.json())
                             .then(async res => {
                                 let data = [];
-                                for (let i in res.data.money) {
-                                    data.push(res.data.money[i].player.name);
+                                for (let i in res.data.placedBlocks) {
+                                    data.push(res.data.placedBlocks[i].player.name);
                                 };
 
                                 let embed = new MessageEmbed()
-                                    .setTitle(`Money - Top (1 - 5)`)
-                                    .setDescription(`\`\`\`${data.join(`,\n`)}\`\`\``)
+                                    .setTitle(`Placed blocks - Top (1 - 5)`)
+                                    .setDescription(`\`\`\`${data.join(",\n").toString()}\`\`\``)
+                                    .setColor("DARK_BUT_NOT_BLACK")
+                                await interaction.reply({ embeds: [embed] })
+                            })
+                        break;
+                    case "top-crafted_items":
+                        fetch ("https://api.kaczkoland.pl/v2/getTopPlayers")
+                            .then(res => res.json())
+                            .then(async res => {
+                                let data = [];
+                                for (let i in res.data.craftedItems) {
+                                    data.push(res.data.craftedItems[i].player.name);
+                                };
+
+                                let embed = new MessageEmbed()
+                                    .setTitle(`Crafted items - Top (1 - 5)`)
+                                    .setDescription(`\`\`\`${data.join(",\n").toString()}\`\`\``)
+                                    .setColor("DARK_BUT_NOT_BLACK")
+                                await interaction.reply({ embeds: [embed] })
+                            })
+                        break;
+                    case "top-deaths":
+                        fetch ("https://api.kaczkoland.pl/v2/getTopPlayers")
+                            .then(res => res.json())
+                            .then(async res => {
+                                let data = [];
+                                for (let i in res.data.allDeaths) {
+                                    data.push(res.data.allDeaths[i].player.name);
+                                };
+
+                                let embed = new MessageEmbed()
+                                    .setTitle(`Deaths - Top (1 - 5)`)
+                                    .setDescription(`\`\`\`${data.join(",\n").toString()}\`\`\``)
+                                    .setColor("DARK_BUT_NOT_BLACK")
+                                await interaction.reply({ embeds: [embed] })
+                            })
+                        break;
+                    case "top-killed_mobs":
+                        fetch ("https://api.kaczkoland.pl/v2/getTopPlayers")
+                            .then(res => res.json())
+                            .then(async res => {
+                                let data = [];
+                                let value = [];
+
+                                for (let i in res.data.killedMobs) {
+                                    data.push(res.data.killedMobs[i].player.name);
+                                    value.push(res.data.killedMobs[i].value)
+                                };
+
+                                let embed = new MessageEmbed()
+                                    .setTitle(`Killed mobs - Top (1 - 5)`)
+                                    .setDescription(`\`\`\`${data.join(`\n`)} \`\`\``)
                                     .setColor("DARK_BUT_NOT_BLACK")
                                 await interaction.reply({ embeds: [embed] })
                             })

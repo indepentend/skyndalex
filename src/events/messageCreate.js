@@ -18,7 +18,6 @@ module.exports = {
             if (message.attachments.size === 0) {
                 message.delete()
             }};
-
         const prefix = "b.";
 
         const args = message.content.slice(prefix.length).trim().split(/ +/);

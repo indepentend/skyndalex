@@ -11,12 +11,13 @@ module.exports = {
         this.setRandomStatus(client);
         setInterval(() => this.setRandomStatus(client), 10000);
 
-        console.log("Bot is online");
+        console.log(`Logged in as ${client.user.tag}`);
     },
     parseActivity(text, client) {
         return text.replace("{version}", client.version);
     },
     setRandomStatus(client) {
-        client.user.setActivity(this.parseActivity(activities[Math.floor(Math.random() * activities.length)], client), {type: "PLAYING"})
+        client.user.setActivity(this.parseActivity(activities[Math.floor(Math.random() * activities.length)], client), {type: "PLAYING"});
+
     }
 }

@@ -1,8 +1,11 @@
 const express = require("express");
 const bodyParser = require("body-parser");
-
+const Vue = require("vue")
 const app = express();
+const path = __dirname + 'assets';
+
 app.use(bodyParser.json())
+app.use(express.static(path));
 
 const config = require("../config.json");
 
@@ -213,7 +216,15 @@ module.exports = async (client) => {
         res.json(user);
 
     })
-
+    app.get("/", async (req, res) => {
+        let app = new Vue({
+            el: "#app",
+            data: {
+                message: "Test."
+            }
+        })
+        res.sendFile(path + "index.vue")
+    })
     app.post("/callback", async (req, res) => {
         if(!req.body.token) {
             res.json({ uccess: false, message: "No `token` in body" });
@@ -258,13 +269,8 @@ module.exports = async (client) => {
         }
         return undefined;
     }
-    /*
-    app.get("/", async (req, res) => {
-        res.send("Login: https://discord.com/oauth2/authorize?client_id=YourClientIDFromDiscord.dev&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Fcallback&response_type=code&scope=guilds")
-    })
 
-     */
     app.listen(config.api.port, null, null, () => {
-        console.log("Api listening on " + config.api.port);
+        console.log("Starting api on port " + config.api.port);
     });
 }

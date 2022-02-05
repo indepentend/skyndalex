@@ -1,4 +1,4 @@
-const { Collection } = require("discord.js");
+const { Collection, Options } = require("discord.js");
 const config = require("./config.json");
 const Base = require("./base");
 const fs = require('fs');
@@ -8,7 +8,31 @@ const dashboard = require('./dashboard/dashboard');
 global.r = require("rethinkdb");
 global.fetch = require("node-fetch");
 
-const client = new Base({ intents: [ 32767 ], partials: ["MESSAGE", "CHANNEL", "REACTION"]});
+const client = new Base({ intents: [ 32767 ], partials: ["MESSAGE", "CHANNEL", "REACTION"], makeCache: Options.cacheWithLimits({
+        UserManager: 0, // client.users
+        MessageManager: 0, // channel.messages
+        BaseGuildEmojiManager: 0, // guild.emojis
+        ChannelManager: 0, // client.channels
+        /*
+        ApplicationCommandManager: 0, // guild.commands
+        GuildChannelManager: 0, // guild.channels
+        GuildBanManager: 0, // guild.bans
+        GuildInviteManager: 0, // guild.invites
+        GuildManager: Infinity, // client.guilds
+        GuildMemberManager: 0, // guild.members
+        GuildStickerManager: 0, // guild.stickers
+        GuildScheduledEventManager: 0, // guild.scheduledEvents
+        PermissionOverwriteManager: 0, // channel.permissionOverwrites
+        PresenceManager: 0, // guild.presences
+        ReactionManager: 0, // message.reactions
+        ReactionUserManager: 0, // reaction.users
+        RoleManager: 0, // guild.roles
+        StageInstanceManager: 0, // guild.stageInstances
+        ThreadManager: 0, // channel.threads
+        ThreadMemberManager: 0, // threadchannel.members
+        VoiceStateManager: 0 // guild.voiceStates
+         */
+    })});
 
 client.slashCommands = new Collection;
 const commandFolders = fs.readdirSync('./commands');
