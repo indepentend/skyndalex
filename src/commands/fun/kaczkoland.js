@@ -1,4 +1,5 @@
 const { MessageEmbed } = require("discord.js");
+const {json} = require("express");
 /* endpoints
     https://api.kaczkoland.pl/v2/u/<nick>
     https://api.kaczkoland.pl/v2/getTopPlayers
@@ -25,12 +26,13 @@ module.exports = {
                 { name: "single-player", description: "Single-Player stats", type: 1, options: [
                         { name: "playerstring", description: "Minecraft username", type: 7 }
                     ]},
+                { name: "online", description: "Online list", type: 1 }
             ]},
     ],
     run: async (client, interaction) => {
         switch (interaction.options.getSubcommand()) {
             case "currentstats":
-                fetch ("https://api.kaczkoland.pl/v2/getSumData")
+                fetch("https://api.kaczkoland.pl/v2/getSumData")
                     .then(res => res.json())
                     .then(async res => {
                         let embed = new MessageEmbed()
@@ -45,111 +47,131 @@ module.exports = {
                             .addField(`Total users (old lobby stats, before the start of survival)`, `\`${res.data.totalUsers}\``, true)
                             .addField(`Total money`, `\`${res.data.money}$\``, true)
                             .setColor("GREEN")
-                        await interaction.reply({ embeds: [embed] })
+                        await interaction.reply({embeds: [embed]})
                     })
                 break;
             case "top":
                 switch (interaction.options.getString("mode")) {
                     case "top_money":
-                        fetch ("https://api.kaczkoland.pl/v2/getTopPlayers")
+                        fetch("https://api.kaczkoland.pl/v2/getTopPlayers")
                             .then(res => res.json())
                             .then(async res => {
                                 let data = [];
                                 for (let i in res.data.money) {
                                     data.push(res.data.money[i].player.name);
-                                };
+                                }
+                                ;
 
                                 let embed = new MessageEmbed()
                                     .setTitle(`Money - Top (1 - 5)`)
                                     .setDescription(`\`\`\`${data.join(`,\n`)}\`\`\``)
                                     .setColor("DARK_BUT_NOT_BLACK")
-                                await interaction.reply({ embeds: [embed] })
+                                await interaction.reply({embeds: [embed]})
                             })
                         break;
                     case "top-mined_blocks":
-                        fetch ("https://api.kaczkoland.pl/v2/getTopPlayers")
+                        fetch("https://api.kaczkoland.pl/v2/getTopPlayers")
                             .then(res => res.json())
                             .then(async res => {
                                 let data = [];
                                 for (let i in res.data.minedBlocks) {
                                     data.push(res.data.minedBlocks[i].player.name);
-                                };
+                                }
+                                ;
 
                                 let embed = new MessageEmbed()
                                     .setTitle(`Mined blocks - Top (1 - 5)`)
                                     .setDescription(`\`\`\`${data.join(",\n").toString()}\`\`\``)
                                     .setColor("DARK_BUT_NOT_BLACK")
-                                await interaction.reply({ embeds: [embed] })
+                                await interaction.reply({embeds: [embed]})
                             })
                         break;
                     case "top-placed_blocks":
-                        fetch ("https://api.kaczkoland.pl/v2/getTopPlayers")
+                        fetch("https://api.kaczkoland.pl/v2/getTopPlayers")
                             .then(res => res.json())
                             .then(async res => {
                                 let data = [];
                                 for (let i in res.data.placedBlocks) {
                                     data.push(res.data.placedBlocks[i].player.name);
-                                };
+                                }
+                                ;
 
                                 let embed = new MessageEmbed()
                                     .setTitle(`Placed blocks - Top (1 - 5)`)
                                     .setDescription(`\`\`\`${data.join(",\n").toString()}\`\`\``)
                                     .setColor("DARK_BUT_NOT_BLACK")
-                                await interaction.reply({ embeds: [embed] })
+                                await interaction.reply({embeds: [embed]})
                             })
                         break;
                     case "top-crafted_items":
-                        fetch ("https://api.kaczkoland.pl/v2/getTopPlayers")
+                        fetch("https://api.kaczkoland.pl/v2/getTopPlayers")
                             .then(res => res.json())
                             .then(async res => {
                                 let data = [];
                                 for (let i in res.data.craftedItems) {
                                     data.push(res.data.craftedItems[i].player.name);
-                                };
+                                }
+                                ;
 
                                 let embed = new MessageEmbed()
                                     .setTitle(`Crafted items - Top (1 - 5)`)
                                     .setDescription(`\`\`\`${data.join(",\n").toString()}\`\`\``)
                                     .setColor("DARK_BUT_NOT_BLACK")
-                                await interaction.reply({ embeds: [embed] })
+                                await interaction.reply({embeds: [embed]})
                             })
                         break;
                     case "top-deaths":
-                        fetch ("https://api.kaczkoland.pl/v2/getTopPlayers")
+                        fetch("https://api.kaczkoland.pl/v2/getTopPlayers")
                             .then(res => res.json())
                             .then(async res => {
                                 let data = [];
                                 for (let i in res.data.allDeaths) {
                                     data.push(res.data.allDeaths[i].player.name);
-                                };
+                                }
+                                ;
 
                                 let embed = new MessageEmbed()
                                     .setTitle(`Deaths - Top (1 - 5)`)
                                     .setDescription(`\`\`\`${data.join(",\n").toString()}\`\`\``)
                                     .setColor("DARK_BUT_NOT_BLACK")
-                                await interaction.reply({ embeds: [embed] })
+                                await interaction.reply({embeds: [embed]})
                             })
                         break;
                     case "top-killed_mobs":
-                        fetch ("https://api.kaczkoland.pl/v2/getTopPlayers")
+                        fetch("https://api.kaczkoland.pl/v2/getTopPlayers")
                             .then(res => res.json())
                             .then(async res => {
                                 let data = [];
-                                let value = [];
 
                                 for (let i in res.data.killedMobs) {
                                     data.push(res.data.killedMobs[i].player.name);
-                                    value.push(res.data.killedMobs[i].value)
-                                };
+                                }
+                                ;
 
                                 let embed = new MessageEmbed()
                                     .setTitle(`Killed mobs - Top (1 - 5)`)
                                     .setDescription(`\`\`\`${data.join(`\n`)} \`\`\``)
                                     .setColor("DARK_BUT_NOT_BLACK")
-                                await interaction.reply({ embeds: [embed] })
+                                await interaction.reply({embeds: [embed]})
                             })
                         break;
                 }
+            case "online":
+                fetch("https://api.kaczkoland.pl/v2/playerList")
+                    .then(res => res.json())
+                    .then(async jsonData => {
+                        let string = jsonData.data
+                        /*
+                        console.log(jsonData.data);
+                        console.log(Object.keys(jsonData.data).length)
+                         */
+
+                        let onlineLength = Object.keys(jsonData.data).length
+                        let onlineList = Object.keys(string);
+
+                        await interaction.reply({ content: `Online players: ${onlineLength}\nList:\n\`\`\`${onlineList.join(",\n")}\`\`\``})
+                    });
+                break;
         }
     }
 };
